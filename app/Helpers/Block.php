@@ -3,6 +3,12 @@ namespace App\Helpers;
 
 class Block {
 
+    const EXTERNAL_FILE_UPLOAD = "external_file_upload";
+
+    const EXTERNAL_FILE_VIEW = "external_file_view";
+
+    const EXTERNAL_TABLE = "external_table";
+
     const VERIFIED = "1";
     const NOT_VERIFIED = "2";
     const EDITED = "3";
@@ -69,6 +75,17 @@ class Block {
     public function action(array $action = array())
     {
         $this->etalon["action"] = $action;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param string $key 
+     * @param string|array|int $value 
+     */
+    public function custom(string $key, $value = null)
+    {
+        $this->etalon[$key] = $value;
         return $this;
     }
 
