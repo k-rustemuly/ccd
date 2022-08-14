@@ -26,4 +26,31 @@ class EdrdRepository extends Repository
         $query = $this->where('person_id', $person_id);
         return $query->get()->all();
     }
+
+    public function searchList($search = array())
+    {
+        $query = $this->join('person', $this->model->table.'.person_id', '=', 'person.id')
+        ->join('rb_gender', 'person.gender_id', '=', 'rb_gender.id')
+        ->select($this->model->table.'.edrd_number',
+            $this->model->table.'.fabula',
+            $this->model->table.'.description',
+            'person.*',
+            'rb_gender.name_'.$this->language.' as gender_name');
+        if(is_array($search) && !empty($search))
+        {
+            if(isset($search['edrd_number']))
+            {
+                $query->where($this->model->table.'.edrd_number', 'like', '%'.$search['edrd_number'].'%');
+            }
+            if(isset($search['fabula']))
+            {
+                $query->where($this->model->table.'.fabula', 'like', '%'.$search['fabula'].'%');
+            }
+            if(isset($search['description']))
+            {
+                $query->where($this->model->table.'.description', 'like', '%'.$search['description'].'%');
+            }
+        }
+        return $query->get()->all();
+    }
 }
