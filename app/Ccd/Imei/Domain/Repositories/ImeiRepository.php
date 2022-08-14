@@ -26,4 +26,21 @@ class ImeiRepository extends Repository
         $query = $this->where('person_id', $person_id);
         return $query->get()->all();
     }
+
+    public function searchList($search = array())
+    {
+        $query = $this->join('person', $this->model->table.'.person_id', '=', 'person.id')
+        ->join('rb_gender', 'person.gender_id', '=', 'rb_gender.id')
+        ->select($this->model->table.'.imei',
+            'person.*',
+            'rb_gender.name_'.$this->language.' as gender_name');
+        if(is_array($search) && !empty($search))
+        {
+            if(isset($search['imei']))
+            {
+                $query->where($this->model->table.'.imei', 'like', '%'.$search['imei'].'%');
+            }
+        }
+        return $query->get()->all();
+    }
 }

@@ -21,11 +21,33 @@ class PersonRepository extends Repository
      * 
      * @return array<mixed>
      */
-    public function getList():array
+    public function getList($search = array()):array
     {
         $query = $this->join('rb_gender', $this->model->table.'.gender_id', '=', 'rb_gender.id')
         ->select($this->model->table.'.*',
             'rb_gender.name_'.$this->language.' as gender_name');
+        if(is_array($search) && !empty($search))
+        {
+            if(isset($search['full_name']))
+            {
+                $query->where($this->model->table.'.full_name', 'like', '%'.$search['full_name'].'%');
+            }
+
+            if(isset($search['iin']))
+            {
+                $query->where($this->model->table.'.iin', 'like', '%'.$search['iin'].'%');
+            }
+
+            if(isset($search['birthday']))
+            {
+                $query->where($this->model->table.'.birthday', $search['birthday']);
+            }
+
+            if(isset($search["gender_id"]))
+            {
+                $query->where($this->model->table.'.gender_id', $search['gender_id']);
+            }
+        }
         return $query->get()->all();
     }
 

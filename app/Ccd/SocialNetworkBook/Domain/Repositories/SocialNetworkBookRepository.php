@@ -28,4 +28,24 @@ class SocialNetworkBookRepository extends Repository
                         ->where($this->model->table.'.person_id', $person_id);
         return $query->get()->all();
     }
+
+    public function searchList($search = array())
+    {
+        $query = $this->join('person', $this->model->table.'.person_id', '=', 'person.id')
+        ->join('rb_gender', 'person.gender_id', '=', 'rb_gender.id')
+        ->join('rb_social_network', $this->model->table.'.social_network_id', '=', 'rb_social_network.id')
+        ->select($this->model->table.'.social_network_id',
+                $this->model->table.'.account',
+                'rb_social_network.name_'.$this->language.' as social_network_name',
+                'person.*',
+                'rb_gender.name_'.$this->language.' as gender_name');
+        if(is_array($search) && !empty($search))
+        {
+            if(isset($search['account']))
+            {
+                $query->where($this->model->table.'.account', 'like', '%'.$search['account'].'%');
+            }
+        }
+        return $query->get()->all();
+    }
 }
