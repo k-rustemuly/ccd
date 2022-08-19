@@ -18,7 +18,7 @@ class SearchAction
     public function __invoke(Request $request)
     {
         return $this->responder->withResponse(
-            $this->service->handle($request->search)
+            $this->service->handle()
         )->respond();
     }
 }

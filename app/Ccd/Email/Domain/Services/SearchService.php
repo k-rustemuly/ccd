@@ -30,7 +30,7 @@ class SearchService extends TableType
     public function handle($search = array())
     {
         $this->headers = $this->getHeader();
-        //$this->datas = $this->repository->searchList($search);
+        $this->datas = $this->repository->searchList($search);
         return $this->getData();
     }
 
